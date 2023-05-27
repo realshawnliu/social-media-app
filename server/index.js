@@ -8,8 +8,15 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRoutes from "./routes/authRoute.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 import { register } from "./controllers/authController.js";
+import { createPost } from "./controllers/postController.js";
+import { verifyToken } from "./middleware/authMiddleware.js";
+import User from "./models/User.js";
+import Post from "./models/Post.js";
+import { users, posts } from "./data/mockData.js";
 
 //configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -39,9 +46,12 @@ const upload = multer({ storage });
 
 //routes with files
 app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyToken, upload.single("picture"), createPost);
 
 //routes
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 //mongoose setup
 const PORT = process.env.PORT || 6001;
@@ -52,5 +62,9 @@ mongoose
   })
   .then(() => {
     app.listen(PORT, () => console.log(`server port: ${PORT}`));
+
+    //only add mock data once, when the DB is empty
+    // User.insertMany(users);
+    // Post.insertMany(posts);
   })
   .catch((err) => console.log(`${err} did not connect`));
