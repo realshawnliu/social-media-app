@@ -32,28 +32,27 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-//file storage
+/* FILE STORAGE */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
-    cd(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
-
 const upload = multer({ storage });
 
-//routes with files
+/* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
 
-//routes
+/* ROUTES */
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
-//mongoose setup
+/* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
   .connect(process.env.MONGO_URL, {

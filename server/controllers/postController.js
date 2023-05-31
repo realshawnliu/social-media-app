@@ -1,16 +1,16 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
-//create
+/* CREATE */
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
     const user = await User.findById(userId);
-    const newPost = await Post({
+    const newPost = new Post({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
-      lcoation: user.location,
+      location: user.location,
       description,
       userPicturePath: user.picturePath,
       picturePath,
@@ -26,11 +26,11 @@ export const createPost = async (req, res) => {
   }
 };
 
-//read
+/* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const feedPost = await Post.find();
-    res.status(200).json(feedPost);
+    const post = await Post.find();
+    res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -39,14 +39,14 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const userPost = await Post.find(userId);
-    res.status(200).json(userPost);
+    const post = await Post.find({ userId });
+    res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-//udpate
+/* UPDATE */
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,7 +60,12 @@ export const likePost = async (req, res) => {
       post.likes.set(userId, true);
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(id, { likes: post.likes }, { new: true });
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { likes: post.likes },
+      { new: true }
+    );
+
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(404).json({ message: err.message });
