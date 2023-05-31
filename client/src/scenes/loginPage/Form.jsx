@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Box, Button, TextField, useMediaQuery, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  useMediaQuery,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -44,20 +51,25 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
+    // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-    const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
-      method: "POST",
-      body: formData,
-    });
+
+    const savedUserResponse = await fetch(
+      "http://localhost:3001/auth/register",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
@@ -110,23 +122,27 @@ const Form = () => {
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repeat(4, minmax(0,1fr))"
-            sx={{ "&>div": { gridColumn: isMobile ? undefined : "span 4" } }}
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            sx={{
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+            }}
           >
             {isRegister && (
               <>
                 <TextField
-                  labal="First name"
+                  label="First Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
+                  error={
+                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                  }
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
-                  labal="Last name"
+                  label="Last Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.lastName}
@@ -136,7 +152,7 @@ const Form = () => {
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
-                  labal="Location"
+                  label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.location}
@@ -146,12 +162,14 @@ const Form = () => {
                   sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
-                  labal="Occupation"
+                  label="Occupation"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.occupation}
                   name="occupation"
-                  error={Boolean(touched.occupation) && Boolean(errors.occupation)}
+                  error={
+                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                  }
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
@@ -164,7 +182,9 @@ const Form = () => {
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
+                    onDrop={(acceptedFiles) =>
+                      setFieldValue("picture", acceptedFiles[0])
+                    }
                   >
                     {({ getRootProps, getInputProps }) => (
                       <Box
@@ -188,8 +208,9 @@ const Form = () => {
                 </Box>
               </>
             )}
+
             <TextField
-              labal="Email"
+              label="Email"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.email}
@@ -199,7 +220,8 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
             <TextField
-              labal="Password"
+              label="Password"
+              type="password"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.password}
@@ -209,7 +231,8 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          {/* button */}
+
+          {/* BUTTONS */}
           <Box>
             <Button
               fullWidth
@@ -222,7 +245,7 @@ const Form = () => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              {isLogin ? "Login" : "Register"}
+              {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
             <Typography
               onClick={() => {
