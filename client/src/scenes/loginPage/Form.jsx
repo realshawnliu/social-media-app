@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  useMediaQuery,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, TextField, useMediaQuery, Typography, useTheme } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -23,7 +16,14 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  picture: yup
+    .mixed()
+    .test(
+      "fileFormat",
+      "Unsupported Format",
+      (value) => value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type)
+    )
+    .required("required"),
 });
 
 const loginSchema = yup.object().shape({
@@ -63,13 +63,10 @@ const Form = () => {
     }
     formData.append("picturePath", values.picture.name);
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
+      method: "POST",
+      body: formData,
+    });
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
@@ -104,7 +101,11 @@ const Form = () => {
 
   return (
     <Formik
-      onSubmit={handleFormSubmit}
+      // onSubmit={handleFormSubmit}
+      onSubmit={(values, onSubmitProps) => {
+        console.log(values);
+        handleFormSubmit(values, onSubmitProps);
+      }}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
@@ -135,9 +136,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
+                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
@@ -167,9 +166,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.occupation}
                   name="occupation"
-                  error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
-                  }
+                  error={Boolean(touched.occupation) && Boolean(errors.occupation)}
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
@@ -182,9 +179,7 @@ const Form = () => {
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
+                    onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
                   >
                     {({ getRootProps, getInputProps }) => (
                       <Box
