@@ -33,7 +33,7 @@ const MyPostWidget = ({ picturePath }) => {
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
@@ -60,19 +60,18 @@ const MyPostWidget = ({ picturePath }) => {
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath}>
-          <InputBase
-            placeholder="what's on your mind..."
-            onChange={(e) => setPost(e.target.value)}
-            value={post}
-            sx={{
-              width: "100%",
-              backgroundColor: palette.neutral.light,
-              borderRadius: "2rem",
-              padding: "1rem 2rem",
-            }}
-          />
-        </UserImage>
+        <UserImage image={picturePath} />
+        <InputBase
+          placeholder="What's on your mind..."
+          onChange={(e) => setPost(e.target.value)}
+          value={post}
+          sx={{
+            width: "100%",
+            backgroundColor: palette.neutral.light,
+            borderRadius: "2rem",
+            padding: "1rem 2rem",
+          }}
+        />
       </FlexBetween>
       {isImage && (
         <Box
@@ -97,7 +96,7 @@ const MyPostWidget = ({ picturePath }) => {
                 >
                   <input {...getInputProps()} />
                   {!image ? (
-                    <p>Add Image</p>
+                    <p>Add Image Here</p>
                   ) : (
                     <FlexBetween>
                       <Typography>{image.name}</Typography>
@@ -156,11 +155,15 @@ const MyPostWidget = ({ picturePath }) => {
         )}
 
         <Button
-          disable={!post}
+          disabled={!post}
           onClick={handlePost}
-          sx={{ color: palette.backgroundColor.alt }}
+          sx={{
+            color: palette.background.alt,
+            backgroundColor: palette.primary.main,
+            borderRadius: "3rem",
+          }}
         >
-          Post
+          POST
         </Button>
       </FlexBetween>
     </WidgetWrapper>
