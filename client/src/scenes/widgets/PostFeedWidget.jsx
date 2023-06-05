@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
-const PostsFeedWidget = ({ userId, isUserProfile = false }) => {
+const PostFeedWidget = ({ userId, isUserProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
@@ -67,4 +67,4 @@ const PostsFeedWidget = ({ userId, isUserProfile = false }) => {
   );
 };
 
-export default PostsFeedWidget;
+export default PostFeedWidget;
