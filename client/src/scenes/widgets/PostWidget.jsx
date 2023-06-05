@@ -4,13 +4,13 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, Icon, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { updatePost } from "state";
 
 const PostWidget = ({
   postId,
@@ -44,7 +44,7 @@ const PostWidget = ({
       body: JSON.stringify({ userId: loggedInUserId }),
     });
     const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    dispatch(updatePost({ post: updatedPost }));
   };
 
   return (
@@ -67,12 +67,15 @@ const PostWidget = ({
           src={`http://localhost:3001/assets/${picturePath}`}
         />
       )}
-
-      <FlexBetween mt="0.25">
+      <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton onClick={patchLike}>
-              {isLiked ? <FavoriteOutlined sx={{ color: primary }} /> : <FavoriteBorderOutlined />}
+              {isLiked ? (
+                <FavoriteOutlined sx={{ color: primary }} />
+              ) : (
+                <FavoriteBorderOutlined />
+              )}
             </IconButton>
             <Typography>{likeCount}</Typography>
           </FlexBetween>
@@ -94,7 +97,9 @@ const PostWidget = ({
           {comments.map((comment, i) => (
             <Box key={`${name}-${i}`}>
               <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>{comment}</Typography>
+              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+                {comment}
+              </Typography>
             </Box>
           ))}
           <Divider />
