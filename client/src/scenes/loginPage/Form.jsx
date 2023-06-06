@@ -47,7 +47,7 @@ const initialValuesLogin = {
   password: "",
 };
 
-const Form = (setErrorMessage) => {
+const Form = () => {
   const [pageType, setPageType] = useState("login");
   const { palette } = useTheme();
   const dispatch = useDispatch();
