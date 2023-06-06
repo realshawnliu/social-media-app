@@ -2,10 +2,9 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
 import { ErrorOutlineOutlined } from "@mui/icons-material";
 
-const ErrorMessage = ({ error, onClose }) => {
+const ErrorMessage = ({ error }) => {
   const { palette } = useTheme();
   const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
 
   // Show error message for a fixed time period
   const [visible, setVisible] = useState(true);

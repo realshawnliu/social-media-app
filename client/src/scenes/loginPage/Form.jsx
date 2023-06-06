@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
+import ErrorMessage from "components/ErrorMessage";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -46,7 +47,7 @@ const initialValuesLogin = {
   password: "",
 };
 
-const Form = () => {
+const Form = (setErrorMessage) => {
   const [pageType, setPageType] = useState("login");
   const { palette } = useTheme();
   const dispatch = useDispatch();
@@ -54,43 +55,66 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+  const [error, setError] = useState(null);
 
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", values.picture.name);
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append("picturePath", values.picture.name);
 
-    const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
-      method: "POST",
-      body: formData,
-    });
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+      const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (savedUser) {
-      setPageType("login");
+      if (!savedUserResponse.ok) {
+        // If the server response was not ok
+        const message = await savedUserResponse.text(); // Get the error message from the server
+        setError(message); // Set the error message
+      } else {
+        const savedUser = await savedUserResponse.json();
+        onSubmitProps.resetForm();
+        if (savedUser) {
+          setPageType("login");
+        }
+      }
+    } catch (error) {
+      setError("An unexpected error occurred."); // Set a general error message
+      console.error(error); // Log the error for debugging
     }
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
-      navigate("/home");
+    try {
+      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!loggedInResponse.ok) {
+        // If the server response was not ok
+        const message = await loggedInResponse.text(); // Get the error message from the server
+        setError(message); // Set the error message
+      } else {
+        const loggedIn = await loggedInResponse.json();
+        onSubmitProps.resetForm();
+        if (loggedIn) {
+          dispatch(
+            setLogin({
+              user: loggedIn.user,
+              token: loggedIn.token,
+            })
+          );
+          navigate("/home");
+        }
+      }
+    } catch (error) {
+      setError("An unexpected error occurred."); // Set a general error message
+      console.error(error); // Log the error for debugging
     }
   };
 
@@ -242,9 +266,12 @@ const Form = () => {
             >
               {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
+            {error && <ErrorMessage error={error} onClose={() => setError(null)} />}
+
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");
+                setError(null);
                 resetForm();
               }}
               sx={{

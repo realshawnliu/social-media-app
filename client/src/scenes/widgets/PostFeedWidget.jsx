@@ -1,5 +1,4 @@
 import ErrorMessage from "components/ErrorMessage";
-import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
