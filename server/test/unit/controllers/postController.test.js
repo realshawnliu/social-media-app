@@ -3,9 +3,6 @@ import Post from "../../../models/Post";
 import User from "../../../models/User";
 import sinon from "sinon";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 describe("Post controller", () => {
   afterEach(() => {
@@ -25,7 +22,7 @@ describe("Post controller", () => {
       json: jest.fn(),
     };
     const mockUser = {
-      _id: mongoose.Types.ObjectId(),
+      _id: new mongoose.Types.ObjectId(), // Use 'new' keyword to create a new ObjectId
       firstName: "Test",
       lastName: "User",
       location: "Test Location",

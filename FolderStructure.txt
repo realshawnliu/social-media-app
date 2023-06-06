@@ -1,0 +1,106 @@
+Folder PATH listing for volume PCIe disk
+Volume serial number is 9A1C-6856
+C:.
+|   FolderStructure.txt
+|   README.md
+|   
++---.vscode
+|       launch.json
+|       
++---client
+|   |   .gitignore
+|   |   jsconfig.json
+|   |   package-lock.json
+|   |   package.json
+|   |   
+|   +---public
+|   |   |   index.html
+|   |   |   
+|   |   \---assets
+|   |           linkedin.png
+|   |           twitter.png
+|   |           
+|   \---src
+|       |   App.js
+|       |   index.css
+|       |   index.js
+|       |   theme.js
+|       |   
+|       +---components
+|       |       ErrorMessage.jsx
+|       |       FlexBetween.jsx
+|       |       Friend.jsx
+|       |       UserImage.jsx
+|       |       WidgetWrapper.jsx
+|       |       
+|       +---scenes
+|       |   +---homePage
+|       |   |       index.jsx
+|       |   |       
+|       |   +---loginPage
+|       |   |       Form.jsx
+|       |   |       index.jsx
+|       |   |       
+|       |   +---navbar
+|       |   |       index.jsx
+|       |   |       
+|       |   +---profilePage
+|       |   |       index.jsx
+|       |   |       
+|       |   \---widgets
+|       |           AdvertWidget.jsx
+|       |           FriendListWidget.jsx
+|       |           MyPostWidget.jsx
+|       |           PostFeedWidget.jsx
+|       |           PostWidget.jsx
+|       |           UserWidget.jsx
+|       |           
+|       \---state
+|               index.js
+|               
+\---server
+    |   .env
+    |   .gitignore
+    |   babel.config.json
+    |   index.js
+    |   package-lock.json
+    |   package.json
+    |   
+    +---controllers
+    |       authController.js
+    |       postController.js
+    |       userController.js
+    |       
+    +---data
+    |       mockData.js
+    |       
+    +---middleware
+    |       authMiddleware.js
+    |       
+    +---models
+    |       Post.js
+    |       User.js
+    |       
+    +---public
+    |   \---assets
+    |           carpark_pic.jpg
+    |           
+    +---routes
+    |       authRoutes.js
+    |       postRoutes.js
+    |       userRoutes.js
+    |       
+    \---test
+        +---integration
+        |   +---controllers
+        |   \---routes
+        \---unit
+            +---controllers
+            |       postController.test.js
+            |       
+            +---middleware
+            |       authMiddleware.test.js
+            |       
+            \---models
+                    Post.test.js
+                    
