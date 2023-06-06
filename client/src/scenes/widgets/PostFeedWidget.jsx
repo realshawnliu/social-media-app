@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import ErrorMessage from "components/ErrorMessage";
+import WidgetWrapper from "components/WidgetWrapper";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
@@ -7,23 +9,42 @@ const PostFeedWidget = ({ userId, isUserProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
+  const [error, setError] = useState(null);
 
   const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+    try {
+      const response = await fetch("http://localhost:3001/posts", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      dispatch(setPosts({ posts: data }));
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const getUserPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${userId}/posts`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+    try {
+      const response = await fetch(`http://localhost:3001/posts/${userId}/mposts`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      dispatch(setPosts({ posts: data }));
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   useEffect(() => {
@@ -63,6 +84,7 @@ const PostFeedWidget = ({ userId, isUserProfile = false }) => {
           />
         )
       )}
+      {error && <ErrorMessage error={error} onClose={() => setError(null)} />}
     </>
   );
 };
